@@ -1,4 +1,5 @@
 package vn.dodientu.model;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,27 +12,21 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRoleId implements Serializable {
+public class OrderShipperId implements Serializable {
+    private long orderId;
+    private long shipperId;
 
-    private Long userId;
-    private Long roleId;
-
-    // Constructors, getters, setters
-
-    // Override equals and hashCode based on the fields of the composite key
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UserRoleId that = (UserRoleId) o;
-        return Objects.equals(userId, that.userId) &&
-                Objects.equals(roleId, that.roleId);
+        OrderShipperId that = (OrderShipperId) o;
+        return Objects.equals(orderId, that.orderId) &&
+                Objects.equals(shipperId, that.shipperId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, roleId);
+        return Objects.hash(orderId, shipperId);
     }
 }
-
-
