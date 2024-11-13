@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.Instant;
 @Getter
 @Setter
 @Entity
@@ -23,6 +24,10 @@ public class User {
     private String email;
     private String password;
     private String phone;
+    private String address;
+    private String image_url;
+    private String resetCode;
+    private Instant resetCodeExpiry;
 
     // Constructor có tham số
     public User(String email) {
