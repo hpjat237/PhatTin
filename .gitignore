@@ -39,3 +39,4 @@ build/
 
 # Ignore application properties
 src/main/resources/application.properties
+/application.log
