@@ -1,4 +1,4 @@
-package vn.dodientu.service.impl;
+package vn.dodientu.service.implementation;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;

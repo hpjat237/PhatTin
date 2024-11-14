@@ -1,8 +1,17 @@
-package vn.dodientu.service.impl;
+package vn.dodientu.service.implementation;
 
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import vn.dodientu.Jwt.JwtUtil;
+import vn.dodientu.dto.LoginRequest;
 import vn.dodientu.dto.Response;
 import vn.dodientu.model.User;
 import vn.dodientu.repository.UserRepository;
@@ -14,22 +23,47 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class AuthServiceImpl implements IAuthService {
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private IEmailService emailService;
+    private final UserRepository userRepository;
+    private final IEmailService emailService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
 
     @Value("${reset.code.duration}")
     private String resetCodeDuration;
 
     @Override
-    public Response login(String email, String password) {
-        return null;
+    public Response login(LoginRequest request) {
+        try{
+        Authentication auth = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()
+                )
+        );
+
+        // Set authentication in the context
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        // Generate JWT token
+        String jwtToken = jwtUtil.generateToken(auth);
+
+        // Create a response DTO with the token
+        Response response = new Response();
+        response.setResult(jwtToken);
+        response.setMessage("Login successful");
+
+        return response;
+
+    } catch (BadCredentialsException e) {
+        // Return error response for incorrect credentials
+            throw new BadCredentialsException("Invalid email or password", e);
+        }
     }
+
 
     @Override
     public Response register(User user) {
